@@ -1,4 +1,5 @@
 package com.example.models;
 
-public record ErrorResponse(String message) {
-}
+public record ErrorResponse (
+        String message
+) {}
