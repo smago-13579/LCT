@@ -1,0 +1,122 @@
+openapi: "3.0.2"
+info:
+  title: API Title
+  version: "1.0"
+servers:
+  - url: https://localhost:8080/
+
+
+components:
+  schemas:
+    Error:
+      description: "error details"
+      type: object
+      properties:
+        error:
+          type: string
+    AuthOkResponse:
+      description: "JWT Token"
+      type: object
+      properties:
+        authToken:
+          type: string
+
+  requestBodies:
+    UserDto:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: "user email used as a login name"
+                type: string
+                format: email
+              password:
+                description: "user's password"
+                type: string
+                format: password
+              firstName:
+                type: string
+                format: firstName
+              lastName:
+                type: string
+                format: lastName
+              middleName:
+                type: string
+                format: middleName
+              telephone:
+                type: string
+
+    AuthRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: "user email used as a login name"
+                type: string
+                format: email
+              password:
+                description: "user's password"
+                type: string
+                format: password
+
+  responses:
+    400BadInput:
+      description: "bad input parameters"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    404NotFound:
+      description: "user not found"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+paths:
+  /ping:
+    get:
+      responses:
+        '200':
+          description: OK
+
+  /user/register:
+    post:
+      description: "Creates new user"
+      requestBody:
+        $ref: '#/components/requestBodies/UserDto'
+
+      responses:
+        200:
+          description: "user created"
+        409:
+          description: "Already existed user"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          $ref: '#/components/responses/400BadInput'
+
+  /user/auth:
+    post:
+      description: "Authorize user"
+      requestBody:
+        $ref: '#/components/requestBodies/AuthRequest'
+
+      responses:
+        200:
+          description: "user created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthOkResponse'
+
+
