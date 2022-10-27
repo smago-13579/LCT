@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.time.LocalDate;
 
 @Embeddable
 @Data
@@ -20,4 +21,7 @@ public class UserInfo {
 
     private String middleName;
     private String telephone;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
 }

@@ -10,6 +10,7 @@ import com.example.models.BadInputParameters;
 import com.example.models.ConflictDataException;
 import com.example.repository.UsersRepository;
 import com.example.security.JwtTokenUtil;
+import com.example.service.util.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 @Service
@@ -29,30 +32,35 @@ public class UserServiceImpl implements UserService {
     private final JwtUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
+    private final Validator validator;
 
     public UserServiceImpl(AuthenticationManager authenticationManager,
                            UsersRepository usersRepository,
                            JwtUserDetailsService userDetailsService,
                            PasswordEncoder passwordEncoder,
-                           JwtTokenUtil jwtTokenUtil)
+                           JwtTokenUtil jwtTokenUtil,
+                           Validator validator)
     {
         this.authenticationManager = authenticationManager;
         this.usersRepository = usersRepository;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.validator = validator;
     }
 
     @Override
     public void registerUser(UserDto userDto) {
-        validateUserForm(new AuthRequest(userDto.getEmail(), userDto.getPassword()));
+        validator.validateUserForm(userDto.getEmail(), userDto.getPassword());
+        LocalDate date = validator.validateDate(userDto.getBirthDate());
+
         try {
             usersRepository.save(
                     UserDAO.builder()
                             .email(userDto.getEmail())
                             .password(passwordEncoder.encode(userDto.getPassword()))
                             .userInfo(new UserInfo(userDto.getFirstName(), userDto.getLastName(),
-                                    userDto.getMiddleName(), userDto.getTelephone()))
+                                    userDto.getMiddleName(), userDto.getTelephone(), date))
                             .status(AccountStatus.NOT_ACTIVE)
                             .build()
             );
@@ -81,14 +89,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public void validateUserForm(AuthRequest user) {
-        if (StringUtils.isEmpty(user.email()) || StringUtils.isEmpty(user.password())) {
-            throw new BadInputParameters("Invalid input");
-        }
-
-        if (!Pattern.compile("([^@\\s]+)@([^@\\s]+)$")
-                .matcher(user.email())
-                .matches()) {
-            throw new BadInputParameters("invalid email");
-        }
+        validator.validateUserForm(user.email(), user.password());
     }
 }

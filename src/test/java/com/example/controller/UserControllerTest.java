@@ -26,14 +26,15 @@ public class UserControllerTest {
 
     @Test
     void registerUserTest() {
-        registerUser("abc@ya.ru", "abcdefghij", "firstName", "lastName", HttpStatus.OK);
-        registerUser("abc", "abcdefghij", "firstName", "lastName", HttpStatus.BAD_REQUEST);
+        registerUser("abc@ya.ru", "abcdefghij", "firstName", "lastName", "2000-12-03", HttpStatus.OK);
+        registerUser("abc@ya.ru", "abcdefghij", "firstName", "lastName", "2007-12-03", HttpStatus.BAD_REQUEST);
+        registerUser("abc", "abcdefghij", "firstName", "lastName", "2000-12-03", HttpStatus.BAD_REQUEST);
     }
 
     @Test
     void authorizeUserTest() {
         registerUser("firstEmail@ya.ru", "abcdefghij",
-                "firstName", "lastName", HttpStatus.OK);
+                "firstName", "lastName", "2000-12-03", HttpStatus.OK);
         authorizeUser("firstEmail@ya.ru", "abcdefghij", HttpStatus.OK);
     }
 
@@ -48,8 +49,8 @@ public class UserControllerTest {
 
     @SneakyThrows
     private void registerUser(String email, String password, String firstName,
-                              String lastName, HttpStatus status) {
-        String content = getUserCredsAsString(email, password, firstName, lastName);
+                              String lastName, String date, HttpStatus status) {
+        String content = getUserCredsAsString(email, password, firstName, lastName, date);
         this.mockMvc.perform(post("/user/register")
                         .content(content)
                         .header("Content-Type", "application/json"))
@@ -58,9 +59,9 @@ public class UserControllerTest {
     }
 
     private String getUserCredsAsString(String email, String password, String firstName,
-                                        String lastName) throws Exception {
+                                        String lastName, String date) throws Exception {
         return mapper.writeValueAsString(UserDto.builder().email(email)
-                .password(password).firstName(firstName).lastName(lastName).build());
+                .password(password).firstName(firstName).lastName(lastName).birthDate(date).build());
     }
 
     private String getUserCredsAsString(String email, String password) throws Exception {
