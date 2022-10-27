@@ -24,4 +24,6 @@ public class UserInfo {
 
     @Column(nullable = false)
     private LocalDate birthDate;
+    @Column(nullable = false)
+    private Integer code;
 }

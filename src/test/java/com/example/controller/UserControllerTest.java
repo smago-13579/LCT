@@ -26,7 +26,7 @@ public class UserControllerTest {
 
     @Test
     void registerUserTest() {
-        registerUser("abc@ya.ru", "abcdefghij", "firstName", "lastName", "2000-12-03", HttpStatus.OK);
+        registerUser("sultan-13579@yandex.ru", "abcdefghij", "firstName", "lastName", "2000-12-03", HttpStatus.OK);
         registerUser("abc@ya.ru", "abcdefghij", "firstName", "lastName", "2007-12-03", HttpStatus.BAD_REQUEST);
         registerUser("abc", "abcdefghij", "firstName", "lastName", "2000-12-03", HttpStatus.BAD_REQUEST);
     }
