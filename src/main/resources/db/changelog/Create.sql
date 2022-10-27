@@ -8,5 +8,6 @@ create table users
     last_name   varchar(255) not null,
     middle_name varchar(255),
     telephone   varchar(255),
-    birth_date  date         not null
+    birth_date  date         not null,
+    code        integer      not null
 );

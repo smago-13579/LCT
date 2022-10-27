@@ -7,4 +7,6 @@ import com.example.models.AuthOkResponse;
 public interface UserService {
     void registerUser(UserDto userDto);
     AuthOkResponse authorize(AuthRequest authRequest) throws Exception;
+
+    void verifyUser(String id, String code);
 }

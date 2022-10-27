@@ -4,9 +4,7 @@ import com.example.dto.AuthRequest;
 import com.example.dto.UserDto;
 import com.example.models.AuthOkResponse;
 import com.example.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController extends BaseController {
@@ -24,5 +22,10 @@ public class UserController extends BaseController {
     @PostMapping(path = "/user/auth")
     public AuthOkResponse authorize(@RequestBody AuthRequest authRequest) throws Exception {
         return userService.authorize(authRequest);
+    }
+
+    @GetMapping(value = "/user/verify/{id}/{code}")
+    public void verify(@PathVariable String id, @PathVariable String code) {
+        userService.verifyUser(id, code);
     }
 }
