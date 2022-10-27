@@ -48,6 +48,11 @@ components:
                 format: middleName
               telephone:
                 type: string
+                example: +7988-123-45-67
+              birthDate:
+                type: string
+                format: birthDate
+                example: 2000-10-30
 
     AuthRequest:
       required: true
