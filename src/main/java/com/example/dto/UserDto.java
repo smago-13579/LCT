@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -23,6 +24,8 @@ public class UserDto {
     @NotBlank
     private String lastName;
     private String middleName;
+    @NotBlank
+    private String birthDate;
 
     @Pattern(regexp = "\\+7\\d{3}-\\d{3}-\\d{2}-\\d{2}")
     private String telephone;
